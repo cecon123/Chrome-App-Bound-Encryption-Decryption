@@ -83,7 +83,8 @@ ABE employs a multi-layered strategy for key management and data encryption:
     - When Chrome (or this project's injected DLL) needs the plaintext `app_bound_key`:
     - It instantiates the `IElevator` COM object using browser-specific CLSIDs/IIDs:
       - **Google Chrome:** CLSID: `{708860E0-F641-4611-8895-7D867DD3675B}`, IID: `{463ABECF-410D-407F-8AF5-0DF35A005CC8}`
-      - **Brave Browser:** CLSID: `{576B31AF-6369-4B6B-8560-E4B203A97A8B}`, IID: `{F396861E-0C8E-4C71-8256-2FAE6D759C9E}`
+      - **Brave Browser:** CLSID: `{576B31AF-6369-4B6B-8560-E4B203A97A8B}`, IID: `{F396861E-0C8E-4C71-8256-2FAE6D759CE9}`
+      - **CocCoc Browser:** CLSID: `{77358251-489E-46F6-AAD6-1D41B89FEF01}`, IID: `{0E9BCC98-8138-417A-83C3-4D4AAFED6316}`
     - The `APPB`-prefixed, Base64-encoded string from `Local State` is decoded and the `APPB` prefix stripped. This resulting blob (the doubly DPAPI-wrapped key) is passed to `IElevator::DecryptData`.
 
 5.  **Unwrapping and Path Validation by `IElevator::DecryptData`:**
@@ -105,7 +106,7 @@ The `chrome_inject.exe` and `chrome_decrypt.dll` tools developed in this project
 
 - **Injector (`chrome_inject.exe`):**
 
-  1.  **Target Process Acquisition:** Identifies a running instance of the target Chromium-based browser (Chrome, Edge, Brave). It can also auto-start the browser if specified.
+  1.  **Target Process Acquisition:** Identifies a running instance of the target Chromium-based browser (Chrome, Edge, Brave, CocCoc). It can also auto-start the browser if specified.
   2.  **Architectural Consistency:** Critically ensures that the injector and target process architectures align (e.g., x64 injector for x64 Chrome, ARM64 for ARM64 Chrome).
   3.  **DLL Path Marshalling:** Allocates memory within the target browser process's address space (`VirtualAllocEx`) and carefully writes the full path string of `chrome_decrypt.dll` into this remote memory (`WriteProcessMemory`).
   4.  **Remote Thread Execution:** Creates a new thread within the target process. The entry point for this new thread is the address of `LoadLibraryA` (from `kernel32.dll`), and its sole argument is the remote memory address where the DLL path string was written.

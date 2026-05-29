@@ -338,7 +338,7 @@ and generates C++ stubs for security research and development.
 
 positional arguments:
   TARGET                Either the direct path to an executable (e.g., elevation_service.exe)
-                        OR a browser key ('chrome', 'edge', 'brave') when using --scan mode.
+                        OR a browser key ('chrome', 'edge', 'brave', 'avast', 'coccoc') when using --scan mode.
 
 options:
   -h, --help            show this help message and exit
@@ -357,7 +357,7 @@ options:
                         Manually provide a CLSID (e.g., {XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX}) to use.
                         This can supplement or override discovery, especially useful when analyzing a
                         direct executable path without --scan, or if registry scan fails.
-  --scan                Enable scan mode. In this mode, TARGET should be a browser key ('chrome', 'edge', 'brave').
+  --scan                Enable scan mode. In this mode, TARGET should be a browser key ('chrome', 'edge', 'brave', 'avast', 'coccoc').
                         The script will attempt to find the service executable and CLSID from the registry.
 
 Examples:

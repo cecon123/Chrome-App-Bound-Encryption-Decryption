@@ -51,7 +51,7 @@ This tool's effectiveness is rooted in a combination of modern, evasion-focused 
 
 ### Compatibility & Usability
 
-- 🌐 Works on **Google Chrome**, **Brave**, **Edge**, & **Avast Secure Browser**.
+- 🌐 Works on **Google Chrome**, **Brave**, **Edge**, **Avast Secure Browser**, & **Cốc Cốc**.
 - 💻 Natively supports **x64** and **ARM64** architectures.
 - 🚀 **Standalone Operation:** Automatically creates a new browser process to host the payload, requiring no pre-existing running instances.
 - 📁 Customizable output directory for extracted data.
@@ -68,20 +68,21 @@ This tool's effectiveness is rooted in a combination of modern, evasion-focused 
 | **Brave**                  | 1.86.148 (144.1.86.148)      |
 | **Microsoft Edge**         | 145.0.3800.36                |
 | **Avast Secure Browser**   | 143.0.33371.147              |
+| **CocCoc**                 | 147.0.7727.150               |
 
-> **Note:** Chrome/Brave/Edge 144+ use the new `IElevator2` COM interface. This tool automatically uses `IElevator2` when available and falls back to `IElevator` for older versions. Avast Secure Browser uses a custom `IElevatorChrome` interface with an extended vtable (12 methods, DecryptData at offset 104).
+> **Note:** Chrome/Brave/Edge/CocCoc 144+ use the new `IElevator2` COM interface. This tool automatically uses `IElevator2` when available and falls back to `IElevator` for older versions. Avast Secure Browser uses a custom `IElevatorChrome` interface with an extended vtable (12 methods, DecryptData at offset 104).
 
 ## 🔍 Feature Support Matrix
 
 This matrix outlines the extraction capabilities for each supported browser.
 
-| Feature              | Google Chrome          | Microsoft Edge         | Brave                  | Avast Secure Browser   |
-|----------------------|------------------------|------------------------|------------------------|------------------------|
-| **Cookies**         | ✅ ABE                | ✅ ABE                | ✅ ABE                | ✅ ABE                |
-| **Passwords**       | ✅ ABE                | ✅ ABE                | ✅ ABE                | ✅ ABE                |
-| **Payment Methods** | ✅ ABE                | ✅ ABE                | ✅ ABE                | ✅ ABE                |
-| **IBANs**           | ✅ ABE                | ❌ N/A                | ✅ ABE                | ✅ ABE                |
-| **Auth Tokens**     | ✅ Google             | ❌ N/A                | ❌ N/A                | ❌ N/A                |
+| Feature              | Google Chrome          | Microsoft Edge         | Brave                  | Avast Secure Browser   | CocCoc                 |
+|----------------------|------------------------|------------------------|------------------------|------------------------|------------------------|
+| **Cookies**         | ✅ ABE                | ✅ ABE                | ✅ ABE                | ✅ ABE                | ✅ ABE                |
+| **Passwords**       | ✅ ABE                | ✅ ABE                | ✅ ABE                | ✅ ABE                | ✅ ABE                |
+| **Payment Methods** | ✅ ABE                | ✅ ABE                | ✅ ABE                | ✅ ABE                | ✅ ABE                |
+| **IBANs**           | ✅ ABE                | ❌ N/A                | ✅ ABE                | ✅ ABE                | ✅ ABE                |
+| **Auth Tokens**     | ✅ Google             | ❌ N/A                | ❌ N/A                | ❌ N/A                | ❌ N/A                |
 
 ## 🔬 Technical Workflow
 
@@ -109,7 +110,7 @@ The tool's execution is focused on stealth and efficiency, built around a **Dire
     - **Destroys PE headers** by overwriting DOS/NT headers with pseudo-random data, eliminating MZ signature from memory.
     - Finally, invokes the payload's `DllMain`.
 2.  **Connection & Setup:** The `DllMain` spawns a new thread that immediately connects to the named pipe handle passed by the injector. It reads the configuration, including the output path, sent by the injector. All subsequent logs and status updates are relayed back through this pipe.
-3.  **Target-Context COM Hijack:** Now running natively within the browser process, the payload instantiates the browser's internal COM server (`IElevator2` for Chrome/Brave 144+, `IElevator` for earlier versions, `IEdgeElevatorFinal` for Edge, or `IAvastElevator` for Avast Secure Browser). As the call originates from a trusted process path, all of the server's security checks are passed.
+3.  **Target-Context COM Hijack:** Now running natively within the browser process, the payload instantiates the browser's internal COM server (`IElevator2` for Chrome/Brave/CocCoc 144+, `IElevator` for earlier versions, `IEdgeElevatorFinal` for Edge, or `IAvastElevator` for Avast Secure Browser). As the call originates from a trusted process path, all of the server's security checks are passed.
 4.  **Master Key Decryption:** The payload calls the `DecryptData` method on the COM interface, providing the `app_bound_encrypted_key` it reads from the `Local State` file. The COM server dutifully decrypts the key and returns the plaintext AES-256 master key to the payload.
 5.  **Data Exfiltration:** Armed with the AES key, the payload enumerates all user profiles (`Default`, `Profile 1`, etc.). For each profile, it queries the relevant SQLite databases (`Cookies`, `Login Data`, `Web Data`), decrypts the data blobs using AES-256-GCM, and formats the secrets as JSON. The results are written directly to the output directory specified by the injector.
 6.  **Shutdown:** After processing all profiles, the payload sends a completion signal to the injector over the pipe and calls `FreeLibraryAndExitThread` to clean up. The injector, upon receiving the signal, terminates the parent host process with `NtTerminateProcess`.
@@ -155,7 +156,7 @@ _________ .__                         ___________.__                       __
  Direct Syscall-Based Reflective Hollowing
  x64 & ARM64 | v0.20.0 by @xaitax
 
-  Usage: chromelevator.exe [options] <chrome|chrome-beta|edge|brave|avast|all>
+  Usage: chromelevator.exe [options] <chrome|chrome-beta|edge|brave|avast|coccoc|all>
 
   Options:
     -v, --verbose      Show detailed output
@@ -325,6 +326,7 @@ Example paths (assuming default output location):
 - 🔑 **Passwords (Edge Profile 1):** .\output\Edge\Profile 1\passwords.json
 - 💳 **Payment Methods (Brave Default profile):** .\output\Brave\Default\payments.json
 - 🏦 **IBANs (Chrome Profile 1):** .\output\Chrome\Profile 1\iban.json
+- 🍪 **Cookies (CocCoc Default profile):** .\output\CocCoc\Default\cookies.json
 
 ### 🍪 Cookie Extraction
 

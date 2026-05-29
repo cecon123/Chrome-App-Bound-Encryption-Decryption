@@ -2,6 +2,23 @@
 
 ## Changelog
 
+### v0.21.0
+
+* **CocCoc Browser Support**: Added full App-Bound Encryption decryption support for CocCoc Browser (Cốc Cốc).
+  * CocCoc uses standard Chromium `IElevator`/`IElevator2` vtable layout (EncryptData at offset 32, DecryptData at offset 40), fully compatible with the existing `IOriginalBaseElevator` COM interface — no custom COM stubs needed.
+  * CLSID: `{77358251-489E-46F6-AAD6-1D41B89FEF01}`
+  * IElevatorCocCoc (v1) IID: `{0E9BCC98-8138-417A-83C3-4D4AAFED6316}`
+  * IElevator2CocCoc (v2) IID: `{7E26AA1D-1A19-4538-9780-D0B6A1A693E5}`
+  * Browser discovery via Windows Registry with standard and WOW6432Node paths, plus path validation for `\CocCoc\Browser\` to avoid conflicts with other `browser.exe` binaries.
+  * Use `chromelevator.exe coccoc` or include in `all` scan.
+
+* **COMrade ABE CocCoc Integration**: Updated `comrade_abe.py` to support CocCoc browser analysis.
+  * Added `CocCocElevationService` to known browser services for auto-discovery.
+  * Added CocCoc IIDs to `KNOWN_PRIMARY_IIDS` for primary interface detection.
+  * Service discovery now correctly identifies CocCoc vendor from service name.
+
+* **Browser Process Inspector Update**: Added CocCoc (`browser.exe`) and Avast (`AvastBrowser.exe`) to the process monitor tool.
+
 ### v0.20.0
 
 * **Critical Stealth Fix: Bootstrap Direct Syscalls** (thanks [@wrapdavid](https://github.com/wrapdavid) for the sharp-eyed report!): The reflective loader's bootstrap now correctly invokes direct syscalls for `NtAllocateVirtualMemory` and `NtProtectVirtualMemory` through the linked `SyscallTrampoline` assembly function.

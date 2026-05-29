@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
 Browser Process Inspector
-Enumerates all Chrome/Edge/Brave processes with their full command-line arguments.
+Enumerates all Chrome/Edge/Brave/Avast/CocCoc processes with their full command-line arguments.
 Identifies Network Service processes that hold database file locks.
 """
 
