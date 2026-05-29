@@ -2,7 +2,7 @@
 
 ## Changelog
 
-### v0.21.0
+### v0.20.1
 
 * **CocCoc Browser Support**: Added full App-Bound Encryption decryption support for CocCoc Browser (Cốc Cốc).
   * CocCoc uses standard Chromium `IElevator`/`IElevator2` vtable layout (EncryptData at offset 32, DecryptData at offset 40), fully compatible with the existing `IOriginalBaseElevator` COM interface — no custom COM stubs needed.
