@@ -12,7 +12,9 @@ from collections import defaultdict
 BROWSERS = {
     'chrome.exe': 'Chrome',
     'msedge.exe': 'Edge',
-    'brave.exe': 'Brave'
+    'brave.exe': 'Brave',
+    'avastbrowser.exe': 'Avast',
+    'browser.exe': 'CocCoc'
 }
 
 def get_browser_processes():

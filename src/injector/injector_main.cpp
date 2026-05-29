@@ -104,7 +104,7 @@ int wmain(int argc, wchar_t* argv[]) {
         else if ((arg == L"--output-path" || arg == L"-o") && i + 1 < argc) output = argv[++i];
         else if (arg == L"--help" || arg == L"-h") {
             console.Banner();
-            std::wcout << L"\n  Usage: chromelevator.exe [options] <chrome|chrome-beta|edge|brave|avast|all>\n\n";
+            std::wcout << L"\n  Usage: chromelevator.exe [options] <chrome|chrome-beta|edge|brave|avast|coccoc|all>\n\n";
             std::wcout << L"  Options:\n";
             std::wcout << L"    -v, --verbose      Show detailed output\n";
             std::wcout << L"    -f, --fingerprint  Extract browser fingerprint\n";
@@ -119,7 +119,7 @@ int wmain(int argc, wchar_t* argv[]) {
     mainConsole.Banner();
 
     if (targetType.empty()) {
-        std::wcout << L"\n  Usage: chromelevator.exe [options] <chrome|chrome-beta|edge|brave|avast|all>\n\n";
+        std::wcout << L"\n  Usage: chromelevator.exe [options] <chrome|chrome-beta|edge|brave|avast|coccoc|all>\n\n";
         std::wcout << L"  Options:\n";
         std::wcout << L"    -v, --verbose      Show detailed output\n";
         std::wcout << L"    -f, --fingerprint  Extract browser fingerprint\n";

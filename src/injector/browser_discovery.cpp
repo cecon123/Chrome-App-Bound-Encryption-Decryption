@@ -16,7 +16,8 @@ namespace Injector {
             {L"chrome-beta", {L"chrome.exe", "Chrome Beta"}},
             {L"edge", {L"msedge.exe", "Edge"}},
             {L"brave", {L"brave.exe", "Brave"}},
-            {L"avast", {L"AvastBrowser.exe", "Avast"}}
+            {L"avast", {L"AvastBrowser.exe", "Avast"}},
+            {L"coccoc", {L"browser.exe", "CocCoc"}}
         };
     }
 
@@ -53,6 +54,8 @@ namespace Injector {
                    lowerPath.find(L"\\google\\chrome beta\\") == std::wstring::npos;
         } else if (browserType == L"chrome-beta") {
             return lowerPath.find(L"\\google\\chrome beta\\") != std::wstring::npos;
+        } else if (browserType == L"coccoc") {
+            return lowerPath.find(L"\\coccoc\\browser\\") != std::wstring::npos;
         }
         return true;
     }
@@ -66,7 +69,7 @@ namespace Injector {
 
             for (const auto& regPath : appPaths) {
                 auto path = QueryRegistry(regPath);
-                if (!path.empty() && std::filesystem::exists(path)) {
+                if (!path.empty() && std::filesystem::exists(path) && ValidatePathForBrowser(path, browserType)) {
                     return path;
                 }
             }
@@ -103,6 +106,12 @@ namespace Injector {
                 {L"\\Registry\\Machine\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\Avast Secure Browser", L"InstallLocation"},
                 {L"\\Registry\\Machine\\SOFTWARE\\WOW6432Node\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\Avast Secure Browser", L"InstallLocation"},
                 {L"\\Registry\\Machine\\SOFTWARE\\Clients\\StartMenuInternet\\Avast Secure Browser\\shell\\open\\command", L""}
+            };
+        } else if (browserType == L"coccoc") {
+            altRegistry = {
+                {L"\\Registry\\Machine\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\CocCocBrowser", L"InstallLocation"},
+                {L"\\Registry\\Machine\\SOFTWARE\\WOW6432Node\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\CocCocBrowser", L"InstallLocation"},
+                {L"\\Registry\\Machine\\SOFTWARE\\Clients\\StartMenuInternet\\CocCoc\\shell\\open\\command", L""}
             };
         }
 

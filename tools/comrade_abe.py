@@ -143,6 +143,7 @@ BROWSER_SERVICES = {
              "MicrosoftEdgeBetaElevationService", "MicrosoftEdgeDevElevationService"],
     "brave": ["BraveElevationService", "BraveBetaElevationService", "BraveNightlyElevationService"],
     "avast": ["AvastSecureBrowserElevationService"],
+    "coccoc": ["CocCocElevationService"],
 }
 
 # Known interface IIDs for primary detection (v1 and v2 where applicable)
@@ -155,6 +156,8 @@ KNOWN_PRIMARY_IIDS = {
               "{1BF5208B-295F-4992-B5F4-3A9BB6494838}"],   # IElevatorChrome (v1), IElevator2Chrome (v2)
     # Avast uses IElevatorChrome IID (base IElevator has broken TypeLib registration)
     "avast": ["{7737BB9F-BAC1-4C71-A696-7C82D7994B6F}"],
+    "coccoc": ["{0E9BCC98-8138-417A-83C3-4D4AAFED6316}",
+               "{7E26AA1D-1A19-4538-9780-D0B6A1A693E5}"],   # IElevatorCocCoc (v1), IElevator2CocCoc (v2)
 }
 
 VERSION = "2.2.0"
@@ -1131,6 +1134,8 @@ class ComInterfaceAnalyzer:
                 info.browser_vendor = "Brave"
             elif "avastsecure" in name_lower or "avast" in name_lower:
                 info.browser_vendor = "Avast"
+            elif "coccoc" in name_lower:
+                info.browser_vendor = "CocCoc"
             elif "vivaldi" in name_lower:
                 info.browser_vendor = "Vivaldi"
             elif "opera" in name_lower:
@@ -2586,6 +2591,7 @@ Examples:
   %(prog)s edge -d                   Analyze Edge with SDDL + service details
   %(prog)s brave -v -o out.json      Verbose analysis, export to JSON
   %(prog)s avast                     Analyze Avast Secure Browser elevation service
+  %(prog)s coccoc                    Analyze CocCoc Browser elevation service
   %(prog)s all                       Scan all installed browsers
   %(prog)s all --brief               One-liner per browser
   %(prog)s discover                  List all elevation services
@@ -2604,7 +2610,7 @@ Examples:
 
     # Positional arguments
     parser.add_argument("target", metavar="TARGET",
-                        help="chrome|edge|brave|avast|all, 'discover', 'search', or path to executable")
+                        help="chrome|edge|brave|avast|coccoc|all, 'discover', 'search', or path to executable")
     parser.add_argument("pattern", nargs="?", default=None,
                         help="Search pattern (only used with 'search' command)")
 
@@ -2752,10 +2758,12 @@ def _cmd_analyze(args, parser):
                 analyzer.browser_key = "brave"
             elif "avast" in path_lower:
                 analyzer.browser_key = "avast"
+            elif "coccoc" in path_lower:
+                analyzer.browser_key = "coccoc"
         analyzer.analyze(user_clsid=args.clsid)
     else:
         parser.error(
-            f"Unknown target '{args.target}'. Use chrome|edge|brave|avast|all, 'discover', 'search', or a valid path.")
+            f"Unknown target '{args.target}'. Use chrome|edge|brave|avast|coccoc|all, 'discover', 'search', or a valid path.")
 
     _output_results(analyzer, args)
 
